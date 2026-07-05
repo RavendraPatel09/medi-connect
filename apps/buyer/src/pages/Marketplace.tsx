@@ -40,7 +40,9 @@ const Marketplace = () => {
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-              <Card key={i} glass className="h-72 animate-pulse bg-white/5" />
+              <div key={i} className="relative h-72 rounded-2xl bg-white/5 overflow-hidden">
+                <div className="absolute inset-0 -translate-x-full animate-[shimmer_2s_infinite] bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+              </div>
             ))}
           </div>
         ) : (
@@ -57,22 +59,25 @@ const Marketplace = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
+                  className="h-full"
                 >
-                  <Card glass hoverEffect className="h-full flex flex-col">
-                    <div className="h-32 bg-gradient-to-br from-primary/20 to-transparent border-b border-white/5 flex items-center justify-center p-4">
+                  <Card glass hoverEffect className="h-full flex flex-col group cursor-pointer relative overflow-hidden">
+                    <div className="h-32 bg-gradient-to-br from-primary/20 to-transparent border-b border-white/5 flex items-center justify-center p-4 transition-transform duration-500 group-hover:scale-105">
                        <Pill size={40} className="text-primary/50" />
                     </div>
-                    <CardHeader className="flex-none p-4 pb-0">
+                    <CardHeader className="flex-none p-4 pb-0 z-10 relative bg-surfaceSoft/50 backdrop-blur-sm transition-transform duration-300 group-hover:-translate-y-2">
                       <div className="flex justify-between items-start">
                         <CardTitle className="text-lg line-clamp-1">{listing.medicine?.name || "Medicine"}</CardTitle>
                         <span className="text-lg font-bold text-success">${listing.price}</span>
                       </div>
                       <p className="text-xs text-gray-400 mt-1">Exp: {new Date(listing.expiry_date).toLocaleDateString()}</p>
                     </CardHeader>
-                    <CardContent className="flex-1 p-4 pt-2 flex flex-col justify-end">
+                    <CardContent className="flex-1 p-4 pt-2 flex flex-col justify-end z-10 relative bg-surfaceSoft/50 backdrop-blur-sm">
                       <div className="flex items-center justify-between mt-4">
                         <span className="text-xs font-medium text-gray-300">Qty: {listing.quantity}</span>
-                        <Button size="sm">Add to Cart</Button>
+                        <div className="opacity-0 translate-y-4 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                          <Button size="sm" variant="primary">Add to Cart</Button>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
