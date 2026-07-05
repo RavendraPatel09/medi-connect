@@ -1,16 +1,47 @@
 import React, { useState } from "react";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, Button, Input } from "@medicycle/ui";
-import { UploadCloud, Camera, CheckCircle2, FileText, Pill } from "lucide-react";
+import { UploadCloud, Camera, CheckCircle2, Pill } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useCreateListing } from "@medicycle/hooks";
 
 const UploadMedicine = () => {
-  const [step, setStep] = useState<"upload" | "scanning" | "verify">("upload");
+  const [step, setStep] = useState<"upload" | "scanning" | "verify" | "success">("upload");
+  
+  // Form State
+  const [name, setName] = useState("Amoxicillin 500mg");
+  const [quantity, setQuantity] = useState("14");
+  const [expiryDate, setExpiryDate] = useState("2027-10-15");
+  const [manufacturer, setManufacturer] = useState("Pfizer");
+  const [price, setPrice] = useState("");
+
+  const createListingMutation = useCreateListing();
 
   const handleUpload = () => {
     setStep("scanning");
     setTimeout(() => {
       setStep("verify");
     }, 2000);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!price) return;
+
+    createListingMutation.mutate({
+      name,
+      quantity: parseInt(quantity, 10),
+      expiry_date: expiryDate,
+      manufacturer,
+      price: parseFloat(price)
+    }, {
+      onSuccess: () => {
+        setStep("success");
+        setTimeout(() => {
+          setStep("upload");
+          setPrice("");
+        }, 3000);
+      }
+    });
   };
 
   return (
@@ -94,6 +125,23 @@ const UploadMedicine = () => {
                   <Button variant="outline" onClick={() => setStep("upload")}>Scan Another</Button>
                 </motion.div>
               )}
+              
+              {step === "success" && (
+                <motion.div
+                  key="success"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="w-full h-full flex flex-col items-center justify-center"
+                >
+                  <div className="p-4 rounded-full bg-primary/20 mb-4 text-primary shadow-glow-primary">
+                    <Pill size={48} />
+                  </div>
+                  <h3 className="text-xl font-bold text-white mb-2">Listing Published!</h3>
+                  <p className="text-sm text-gray-400 text-center">
+                    Your medicine is now live on the marketplace.
+                  </p>
+                </motion.div>
+              )}
             </AnimatePresence>
           </CardContent>
         </Card>
@@ -105,67 +153,73 @@ const UploadMedicine = () => {
             <CardDescription>Review and correct any extracted details</CardDescription>
           </CardHeader>
           <CardContent className="flex-1 overflow-y-auto space-y-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">Medicine Name</label>
-              <Input
-                defaultValue={step === "verify" ? "Amoxicillin 500mg" : ""}
-                leftIcon={<Pill size={16} />}
-                disabled={step !== "verify"}
-              />
-            </div>
-            
-            <div className="grid grid-cols-2 gap-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-300">Quantity</label>
+                <label className="text-sm font-medium text-gray-300">Medicine Name</label>
+                <Input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  leftIcon={<Pill size={16} />}
+                  disabled={step !== "verify"}
+                />
+              </div>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-300">Quantity</label>
+                  <Input
+                    type="number"
+                    value={quantity}
+                    onChange={(e) => setQuantity(e.target.value)}
+                    disabled={step !== "verify"}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium text-gray-300">Expiry Date</label>
+                  <Input
+                    type="date"
+                    value={expiryDate}
+                    onChange={(e) => setExpiryDate(e.target.value)}
+                    disabled={step !== "verify"}
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-300">Manufacturer (Optional)</label>
+                <Input
+                  value={manufacturer}
+                  onChange={(e) => setManufacturer(e.target.value)}
+                  disabled={step !== "verify"}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-300">Asking Price ($)</label>
                 <Input
                   type="number"
-                  defaultValue={step === "verify" ? "14" : ""}
+                  step="0.01"
+                  placeholder="0.00"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
                   disabled={step !== "verify"}
+                  required
                 />
               </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-300">Expiry Date</label>
-                <Input
-                  type="date"
-                  defaultValue={step === "verify" ? "2027-10-15" : ""}
-                  disabled={step !== "verify"}
-                />
+              
+              <div className="pt-4">
+                <Button 
+                  type="submit" 
+                  className="w-full" 
+                  disabled={step !== "verify" || createListingMutation.isPending}
+                >
+                  {createListingMutation.isPending ? "Publishing..." : "Submit Listing"}
+                </Button>
               </div>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">Manufacturer (Optional)</label>
-              <Input
-                defaultValue={step === "verify" ? "Pfizer" : ""}
-                disabled={step !== "verify"}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-gray-300">Asking Price ($)</label>
-              <Input
-                type="number"
-                step="0.01"
-                placeholder="0.00"
-                disabled={step !== "verify"}
-              />
-            </div>
-            
-            <div className="pt-4">
-              <Button className="w-full" disabled={step !== "verify"}>
-                Submit Listing
-              </Button>
-            </div>
+            </form>
           </CardContent>
         </Card>
       </div>
-
-      <style>{`
-        @keyframes scan {
-          0%, 100% { top: 0; }
-          50% { top: 100%; }
-        }
-      `}</style>
     </div>
   );
 };
