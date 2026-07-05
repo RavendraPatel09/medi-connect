@@ -55,14 +55,24 @@ const UploadMedicine = () => {
                   className="w-full h-full flex flex-col items-center justify-center space-y-6"
                 >
                   <div className="relative">
-                    <div className="w-32 h-32 rounded-2xl border-2 border-primary overflow-hidden relative bg-surface">
-                      <div className="absolute inset-0 bg-primary/20 animate-pulse" />
-                      <div className="absolute top-0 left-0 w-full h-1 bg-primary shadow-[0_0_10px_#3B82F6] animate-[scan_2s_ease-in-out_infinite]" />
+                    <div className="w-40 h-40 rounded-2xl border border-white/10 overflow-hidden relative bg-surface/50 backdrop-blur-md shadow-glass flex items-center justify-center">
+                      <Pill size={48} className="text-gray-500 opacity-20" />
+                      
+                      {/* Scanning Laser Line */}
+                      <motion.div 
+                        initial={{ top: "-10%" }}
+                        animate={{ top: "110%" }}
+                        transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                        className="absolute left-0 w-full h-[2px] bg-primary shadow-[0_0_15px_#3B82F6]"
+                      >
+                        {/* Glow trailing effect */}
+                        <div className="absolute top-0 left-0 w-full h-12 bg-gradient-to-t from-primary/30 to-transparent -translate-y-full" />
+                      </motion.div>
                     </div>
                   </div>
                   <div className="text-center">
                     <h3 className="text-lg font-medium text-white">Extracting Details...</h3>
-                    <p className="text-sm text-gray-400">Our OCR is analyzing the medicine packaging</p>
+                    <p className="text-sm text-gray-400 mt-1">Our AI is analyzing the packaging</p>
                   </div>
                 </motion.div>
               )}
