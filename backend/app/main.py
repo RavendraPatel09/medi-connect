@@ -10,11 +10,8 @@ app = FastAPI(
 # Configure CORS for the separate frontend applications
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173", # Buyer
-        "http://localhost:5174", # Seller
-        "http://localhost:5175", # Admin
-    ],
+    allow_origins=[],
+    allow_origin_regex=".*",
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
