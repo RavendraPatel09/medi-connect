@@ -5,7 +5,8 @@
   "main": "src/index.ts",
   "dependencies": {
     "framer-motion": "^11.1.9",
-    "lucide-react": "^0.378.0"
+    "lucide-react": "^0.378.0",
+    "@medicycle/theme": "workspace:*"
   },
   "devDependencies": {
     "react": "^18.3.1",
