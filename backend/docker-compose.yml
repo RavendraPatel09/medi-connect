@@ -19,6 +19,21 @@ services:
     volumes:
       - redis_data:/data
 
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - POSTGRES_SERVER=db
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=medicycle
+    depends_on:
+      - db
+      - redis
+
 volumes:
   postgres_data:
   redis_data:
