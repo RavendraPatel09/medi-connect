@@ -50,6 +50,8 @@ const Login = () => {
                   type="email"
                   placeholder="Email address"
                   leftIcon={<Mail size={18} />}
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                   required
                 />
               </div>
@@ -58,6 +60,8 @@ const Login = () => {
                   type="password"
                   placeholder="Password"
                   leftIcon={<Lock size={18} />}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                   required
                 />
                 <div className="text-right">
@@ -66,7 +70,7 @@ const Login = () => {
                   </a>
                 </div>
               </div>
-              <Button type="submit" className="w-full mt-6" isLoading={isLoading}>
+              <Button type="submit" className="w-full mt-6" isLoading={loginMutation.isPending}>
                 Sign In
               </Button>
             </form>

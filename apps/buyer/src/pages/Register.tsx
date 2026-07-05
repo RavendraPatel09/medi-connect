@@ -46,31 +46,42 @@ const Register = () => {
           <CardContent>
             <form onSubmit={handleRegister} className="space-y-4">
               <div className="space-y-2">
-                <Input
-                  type="text"
-                  placeholder="Full Name"
-                  leftIcon={<User size={18} />}
+                <Input 
+                  type="text" 
+                  placeholder="John Doe" 
+                  leftIcon={<User size={16} />}
+                  value={name}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Input
-                  type="email"
-                  placeholder="Email address"
-                  leftIcon={<Mail size={18} />}
+                <Input 
+                  type="email" 
+                  placeholder="john@example.com" 
+                  leftIcon={<Mail size={16} />}
+                  value={email}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                   required
                 />
               </div>
               <div className="space-y-2">
-                <Input
-                  type="password"
-                  placeholder="Password"
-                  leftIcon={<Lock size={18} />}
+                <Input 
+                  type="password" 
+                  placeholder="••••••••" 
+                  leftIcon={<Lock size={16} />}
+                  value={password}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                   required
                 />
               </div>
-              <Button type="submit" className="w-full mt-6" variant="primary" isLoading={isLoading}>
-                Create Account
+              <Button 
+                type="submit" 
+                className="w-full mt-6" 
+                variant="primary" 
+                disabled={registerMutation.isPending}
+              >
+                {registerMutation.isPending ? "Creating account..." : "Create Account"}
               </Button>
             </form>
           </CardContent>
