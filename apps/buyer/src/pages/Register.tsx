@@ -3,19 +3,25 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button, Input, Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@medicycle/ui";
 import { Pill, Mail, Lock, User } from "lucide-react";
 import { motion } from "framer-motion";
+import { useRegister } from "@medicycle/hooks";
 
 const Register = () => {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const registerMutation = useRegister();
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsLoading(false);
-      navigate("/dashboard");
-    }, 1500);
+    registerMutation.mutate(
+      { full_name: name, email, password, role: "buyer" },
+      {
+        onSuccess: () => {
+          navigate("/dashboard");
+        },
+      }
+    );
   };
 
   return (
