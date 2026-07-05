@@ -21,8 +21,13 @@ app.add_middleware(
 )
 
 from app.api.websockets import router as websockets_router
+from app.api.auth import router as auth_router
+from app.api.medicines import router as medicines_router
+from app.core.config import settings
 
 app.include_router(websockets_router)
+app.include_router(auth_router, prefix=f"{settings.API_V1_STR}/auth", tags=["auth"])
+app.include_router(medicines_router, prefix=f"{settings.API_V1_STR}/medicines", tags=["medicines"])
 
 @app.get("/health")
 async def health_check():
