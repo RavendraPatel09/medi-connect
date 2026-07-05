@@ -46,7 +46,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <motion.button
         ref={ref}
+        whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
+        layout
         className={cn(baseStyles, variants[variant], sizes[size], className)}
         disabled={isLoading || disabled}
         {...props}

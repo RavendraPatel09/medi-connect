@@ -13,17 +13,22 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
       <motion.div
         ref={ref}
         whileHover={hoverEffect ? { y: -5, transition: { duration: 0.2 } } : undefined}
+        layout
         className={cn(
-          "rounded-2xl border p-6",
+          "rounded-2xl border p-6 relative overflow-hidden group",
           glass
             ? "bg-surfaceSoft/50 backdrop-blur-xl border-white/5 shadow-glass"
             : "bg-surface border-white/10 shadow-lg",
-          hoverEffect && "hover:border-white/20 hover:shadow-glow-primary transition-colors duration-300",
+          hoverEffect && "hover:border-white/20 hover:shadow-glow-primary transition-all duration-300",
           className
         )}
         {...props}
       >
-        {children}
+        {/* Subtle noise/mesh background for glass cards on hover */}
+        {glass && hoverEffect && (
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+        )}
+        <div className="relative z-10">{children}</div>
       </motion.div>
     );
   }
