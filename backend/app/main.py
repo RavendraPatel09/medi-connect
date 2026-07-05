@@ -20,6 +20,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from app.api.websockets import router as websockets_router
+
+app.include_router(websockets_router)
+
 @app.get("/health")
 async def health_check():
     return {"status": "ok", "message": "MediCycle API is running"}
