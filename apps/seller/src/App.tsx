@@ -18,7 +18,6 @@ const PageWrapper = ({ children }: { children: React.ReactNode }) => (
     {children}
   </motion.div>
 );
-
 const AnimatedRoutes = () => {
   const location = useLocation();
   return (
@@ -30,7 +29,6 @@ const AnimatedRoutes = () => {
     </AnimatePresence>
   );
 };
-
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
